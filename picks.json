@@ -1,0 +1,80 @@
+{
+  "generated_at": "2026-11-22T13:35:04",
+  "picks": [
+    {
+      "symbol": "POWERGRID",
+      "score": 4,
+      "entry": 269.0,
+      "stop_loss": 259.2,
+      "target": 288.61,
+      "risk_pct": 3.64,
+      "rsi": 62.4,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Price above 50-day average",
+        "Healthy momentum (RSI 62)",
+        "Higher than usual volume (1.2x)",
+        "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "score": 4,
+      "entry": 1917.0,
+      "stop_loss": 1851.14,
+      "target": 2048.72,
+      "risk_pct": 3.44,
+      "rsi": 60.0,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 60)",
+        "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "TECHM",
+      "score": 4,
+      "entry": 1746.2,
+      "stop_loss": 1683.51,
+      "target": 1871.58,
+      "risk_pct": 3.59,
+      "rsi": 52.1,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 52)",
+        "Higher than usual volume (1.4x)"
+      ]
+    },
+    {
+      "symbol": "TRENT",
+      "score": 4,
+      "entry": 3256.1,
+      "stop_loss": 3141.02,
+      "target": 3486.26,
+      "risk_pct": 3.53,
+      "rsi": 69.7,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Higher than usual volume (1.2x)",
+        "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "BHARTIARTL",
+      "score": 3,
+      "entry": 2161.7,
+      "stop_loss": 2094.77,
+      "target": 2295.56,
+      "risk_pct": 3.1,
+      "rsi": 72.0,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Near 20-day high (breakout zone)"
+      ]
+    }
+  ]
+}
