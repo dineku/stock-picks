@@ -1,79 +1,81 @@
 {
-  "generated_at": "2026-11-22T13:35:41",
+  "generated_at": "2026-11-23T11:30:58",
   "picks": [
     {
-      "symbol": "POWERGRID",
+      "symbol": "TECHM",
+      "score": 5,
+      "entry": 1777.5,
+      "stop_loss": 1711.61,
+      "target": 1909.29,
+      "risk_pct": 3.71,
+      "rsi": 57.2,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 57)",
+        "Higher than usual volume (1.4x)",
+        "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "TCS",
       "score": 4,
-      "entry": 269.0,
-      "stop_loss": 259.2,
-      "target": 288.61,
-      "risk_pct": 3.64,
-      "rsi": 62.4,
+      "entry": 2460.0,
+      "stop_loss": 2359.05,
+      "target": 2661.9,
+      "risk_pct": 4.1,
+      "rsi": 57.3,
       "style": "Delivery / swing (days to weeks)",
       "reasons": [
         "Price above 50-day average",
-        "Healthy momentum (RSI 62)",
-        "Higher than usual volume (1.2x)",
-        "Near 20-day high (breakout zone)"
-      ]
-    },
-    {
-      "symbol": "ADANIPORTS",
-      "score": 4,
-      "entry": 1917.0,
-      "stop_loss": 1851.14,
-      "target": 2048.72,
-      "risk_pct": 3.44,
-      "rsi": 60.0,
-      "style": "Delivery / swing (days to weeks)",
-      "reasons": [
-        "Strong uptrend (price > 50DMA > 200DMA)",
-        "Healthy momentum (RSI 60)",
-        "Near 20-day high (breakout zone)"
-      ]
-    },
-    {
-      "symbol": "TECHM",
-      "score": 4,
-      "entry": 1746.2,
-      "stop_loss": 1683.51,
-      "target": 1871.58,
-      "risk_pct": 3.59,
-      "rsi": 52.1,
-      "style": "Delivery / swing (days to weeks)",
-      "reasons": [
-        "Strong uptrend (price > 50DMA > 200DMA)",
-        "Healthy momentum (RSI 52)",
-        "Higher than usual volume (1.4x)"
-      ]
-    },
-    {
-      "symbol": "TRENT",
-      "score": 4,
-      "entry": 3256.1,
-      "stop_loss": 3141.02,
-      "target": 3486.26,
-      "risk_pct": 3.53,
-      "rsi": 69.7,
-      "style": "Delivery / swing (days to weeks)",
-      "reasons": [
-        "Strong uptrend (price > 50DMA > 200DMA)",
-        "Higher than usual volume (1.2x)",
+        "Healthy momentum (RSI 57)",
+        "Higher than usual volume (2.1x)",
         "Near 20-day high (breakout zone)"
       ]
     },
     {
       "symbol": "BHARTIARTL",
-      "score": 3,
-      "entry": 2161.7,
-      "stop_loss": 2094.77,
-      "target": 2295.56,
-      "risk_pct": 3.1,
-      "rsi": 72.0,
+      "score": 4,
+      "entry": 2128.5,
+      "stop_loss": 2059.3,
+      "target": 2266.91,
+      "risk_pct": 3.25,
+      "rsi": 64.8,
       "style": "Delivery / swing (days to weeks)",
       "reasons": [
         "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 65)",
         "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "score": 4,
+      "entry": 1095.5,
+      "stop_loss": 1044.55,
+      "target": 1197.4,
+      "risk_pct": 4.65,
+      "rsi": 60.7,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 61)",
+        "Near 20-day high (breakout zone)"
+      ]
+    },
+    {
+      "symbol": "HCLTECH",
+      "score": 4,
+      "entry": 1364.3,
+      "stop_loss": 1310.19,
+      "target": 1472.51,
+      "risk_pct": 3.97,
+      "rsi": 50.0,
+      "style": "Delivery / swing (days to weeks)",
+      "reasons": [
+        "Strong uptrend (price > 50DMA > 200DMA)",
+        "Healthy momentum (RSI 50)",
+        "Higher than usual volume (1.3x)"
       ]
     }
   ]
