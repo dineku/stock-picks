@@ -1,13 +1,15 @@
 """
-Phase 2: Morning scanner (swing / delivery style, uses daily data).
-Usage:  python scanner.py
-Output: prints top picks and saves picks.json (our Android app will read this later)
+Scanner v2 (swing / delivery style, uses daily data).
+Saves picks.json with: top picks + latest indicators ("signals") for every stock.
 """
 import json
-from datetime import datetime
+import sys
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 import yfinance as yf
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 SYMBOLS = [
     "RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "SBIN", "BHARTIARTL",
@@ -41,9 +43,9 @@ def atr(df, period=14):
 def analyse(symbol, df):
     close = df["Close"]
     last = float(close.iloc[-1])
-    sma20 = close.rolling(20).mean().iloc[-1]
-    sma50 = close.rolling(50).mean().iloc[-1]
-    sma200 = close.rolling(200).mean().iloc[-1]
+    sma20 = float(close.rolling(20).mean().iloc[-1])
+    sma50 = float(close.rolling(50).mean().iloc[-1])
+    sma200 = float(close.rolling(200).mean().iloc[-1])
     rsi14 = float(rsi(close).iloc[-1])
     vol_ratio = float(df["Volume"].iloc[-1] / df["Volume"].rolling(20).mean().iloc[-1])
     high20 = float(close.rolling(20).max().iloc[-1])
@@ -77,7 +79,7 @@ def analyse(symbol, df):
     stop = last - 1.5 * atr14
     target = last + 2 * (last - stop)
 
-    return {
+    pick = {
         "symbol": symbol,
         "score": score,
         "entry": round(last, 2),
@@ -88,6 +90,16 @@ def analyse(symbol, df):
         "style": "Delivery / swing (days to weeks)",
         "reasons": reasons,
     }
+    signal = {
+        "close": round(last, 2),
+        "sma20": round(sma20, 2),
+        "sma50": round(sma50, 2),
+        "sma200": round(sma200, 2),
+        "rsi": round(rsi14, 1),
+        "atr": round(atr14, 2),
+        "date": str(df.index[-1].date()),
+    }
+    return pick, signal
 
 
 def main():
@@ -96,16 +108,23 @@ def main():
     data = yf.download(tickers, period="1y", interval="1d", group_by="ticker",
                        auto_adjust=True, progress=False, threads=True)
 
-    results = []
+    results, signals = [], {}
     for s in SYMBOLS:
         try:
             df = data[s + ".NS"].dropna()
             if len(df) < 210:
                 print("Skipping", s, "(not enough data)")
                 continue
-            results.append(analyse(s, df))
+            pick, signal = analyse(s, df)
+            results.append(pick)
+            signals[s] = signal
         except Exception as e:
             print("Skipping", s, "->", e)
+
+    if not results:
+        # Fail loudly so the old picks.json stays in place
+        print("ERROR: no data could be analysed. Keeping the old picks.json.")
+        sys.exit(1)
 
     results.sort(key=lambda r: r["score"], reverse=True)
     picks = results[:TOP_N]
@@ -118,10 +137,15 @@ def main():
         for reason in r["reasons"]:
             print("   -", reason)
 
-    out = {"generated_at": datetime.now().isoformat(timespec="seconds"), "picks": picks}
+    out = {
+        "generated_at": datetime.now(IST).isoformat(timespec="seconds"),
+        "as_of": max(sig["date"] for sig in signals.values()),
+        "picks": picks,
+        "signals": signals,
+    }
     with open("picks.json", "w") as f:
         json.dump(out, f, indent=2)
-    print("\nSaved picks.json")
+    print("\nSaved picks.json with", len(signals), "stocks")
     print("Reminder: rule-based ideas, not guaranteed. Always use the stop-loss.\n")
 
 
