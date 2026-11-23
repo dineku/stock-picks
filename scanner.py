@@ -1,24 +1,38 @@
 """
-Scanner v2 (swing / delivery style, uses daily data).
-Saves picks.json with: top picks + latest indicators ("signals") for every stock.
+Scanner v3 (swing / delivery style, uses daily data).
+- Reads the stock list from symbols.txt (one NSE symbol per line).
+- Saves picks.json with: top picks + latest indicators ("signals") for every stock.
 """
 import json
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 import yfinance as yf
 
 IST = timezone(timedelta(hours=5, minutes=30))
+TOP_N = 10
+BATCH = 40
 
-SYMBOLS = [
+# Used only if symbols.txt is missing
+DEFAULT_SYMBOLS = [
     "RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "SBIN", "BHARTIARTL",
-    "ITC", "LT", "AXISBANK", "KOTAKBANK", "HINDUNILVR", "MARUTI", "SUNPHARMA",
-    "TITAN", "BAJFINANCE", "ASIANPAINT", "NTPC", "POWERGRID", "TATASTEEL",
-    "M&M", "ULTRACEMCO", "WIPRO", "HCLTECH", "ONGC", "COALINDIA",
-    "ADANIPORTS", "TECHM", "NESTLEIND", "TRENT",
+    "ITC", "LT", "AXISBANK",
 ]
-TOP_N = 5
+
+
+def load_symbols():
+    try:
+        with open("symbols.txt") as f:
+            syms = [line.strip().upper() for line in f
+                    if line.strip() and not line.strip().startswith("#")]
+        if syms:
+            return list(dict.fromkeys(syms))  # remove duplicates, keep order
+    except FileNotFoundError:
+        pass
+    print("symbols.txt not found, using the default list.")
+    return DEFAULT_SYMBOLS
 
 
 def rsi(close, period=14):
@@ -87,6 +101,7 @@ def analyse(symbol, df):
         "target": round(target, 2),
         "risk_pct": round((last - stop) / last * 100, 2),
         "rsi": round(rsi14, 1),
+        "vol_ratio": round(vol_ratio, 2),
         "style": "Delivery / swing (days to weeks)",
         "reasons": reasons,
     }
@@ -103,30 +118,40 @@ def analyse(symbol, df):
 
 
 def main():
-    tickers = [s + ".NS" for s in SYMBOLS]
-    print("Downloading data for", len(tickers), "stocks...")
-    data = yf.download(tickers, period="1y", interval="1d", group_by="ticker",
-                       auto_adjust=True, progress=False, threads=True)
+    symbols = load_symbols()
+    print("Scanning", len(symbols), "stocks...")
 
     results, signals = [], {}
-    for s in SYMBOLS:
+    for i in range(0, len(symbols), BATCH):
+        batch = symbols[i:i + BATCH]
+        tickers = [s + ".NS" for s in batch]
         try:
-            df = data[s + ".NS"].dropna()
-            if len(df) < 210:
-                print("Skipping", s, "(not enough data)")
-                continue
-            pick, signal = analyse(s, df)
-            results.append(pick)
-            signals[s] = signal
+            data = yf.download(tickers, period="1y", interval="1d",
+                               group_by="ticker", auto_adjust=True,
+                               progress=False, threads=True)
         except Exception as e:
-            print("Skipping", s, "->", e)
+            print("Batch failed:", e)
+            continue
+
+        for s in batch:
+            try:
+                df = data[s + ".NS"].dropna()
+                if len(df) < 210:
+                    print("Skipping", s, "(not enough data or wrong symbol)")
+                    continue
+                pick, signal = analyse(s, df)
+                results.append(pick)
+                signals[s] = signal
+            except Exception as e:
+                print("Skipping", s, "->", e)
+        time.sleep(1)  # be gentle with Yahoo
 
     if not results:
         # Fail loudly so the old picks.json stays in place
         print("ERROR: no data could be analysed. Keeping the old picks.json.")
         sys.exit(1)
 
-    results.sort(key=lambda r: r["score"], reverse=True)
+    results.sort(key=lambda r: (r["score"], r["vol_ratio"]), reverse=True)
     picks = results[:TOP_N]
 
     print("\n===== TODAY'S WATCHLIST (based on last close) =====")
